@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('status')->default('working');
             $table->string('name');
             $table->enum('group', ["Администратор", "Официант", "Повар"]);
-            $table->rememberToken();
+            $table->string('api_token', 128)->nullable();
             $table->timestamps();
         });
     }

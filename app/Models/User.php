@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -28,4 +29,11 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function generateToken()
+    {
+        $token = Str::random(128);
+        $this->update(['api_token' => $token]);
+        return $token;
+    }
 }
