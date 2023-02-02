@@ -19,6 +19,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['middleware' => ['web']], function () {
+Route::middleware('ghost')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
+});
+Route::middleware('auth:api')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::get('/getjson', function (){
+       return response()->json([
+          "успешно" => "аааа"
+       ]);
+    });
 });
