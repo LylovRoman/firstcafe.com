@@ -34,15 +34,6 @@ Route::middleware('auth:api')->group(function () {
     });
 });
 
-Route::get('/login/fail', function (){
-   return response()->json([
-       "error" => [
-           "code" => 403,
-           "message" => "Login failed"
-       ]
-   ]);
-});
-
 Route::get('/users', [UserController::class, 'index']);
 Route::post('/users', [UserController::class, 'store']);
 Route::post('/change', [ChangeController::class, 'store']);
