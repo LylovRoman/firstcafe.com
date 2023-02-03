@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ChangeStoreRequest;
-use App\Models\Change;
+use App\Http\Requests\UserRequest;
+use App\Http\Resources\UserCollection;
+use App\Http\Resources\UserResource;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class ChangeController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +17,7 @@ class ChangeController extends Controller
      */
     public function index()
     {
-        //
+        return new UserCollection(User::all());
     }
 
     /**
@@ -34,12 +36,15 @@ class ChangeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ChangeStoreRequest $request)
+    public function store(UserRequest $request)
     {
-        $change = Change::query()->create([
-            'date' => $request->date
+        $user = User::query()->create([
+            'name' => $request->name,
+            'login' => $request->login,
+            'status' => $request->status,
+            'group' => $request->group
         ]);
-        if ($change){
+        if ($user){
             return response()->json([
                 "data" => [
                     "code" => "QSASE"
@@ -58,10 +63,10 @@ class ChangeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Change  $change
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show(Change $change)
+    public function show(User $user)
     {
         //
     }
@@ -69,10 +74,10 @@ class ChangeController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Change  $change
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit(Change $change)
+    public function edit(User $user)
     {
         //
     }
@@ -81,10 +86,10 @@ class ChangeController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Change  $change
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Change $change)
+    public function update(Request $request, User $user)
     {
         //
     }
@@ -92,10 +97,10 @@ class ChangeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Change  $change
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Change $change)
+    public function destroy(User $user)
     {
         //
     }
