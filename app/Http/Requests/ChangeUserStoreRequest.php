@@ -25,7 +25,12 @@ class ChangeUserStoreRequest extends FormRequest
     {
         return [
             'change' => 'array|required',
-            'users' => 'array|required'
+            'change.id' => 'integer|required',
+            'users' => 'array|required',
+            'users.*.name' => 'string|required',
+            'users.*.login' => 'string|required',
+            'users.*.status' => 'string|required',
+            'users.*.group' => 'string|required'
         ];
     }
 }

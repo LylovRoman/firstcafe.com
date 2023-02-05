@@ -13,7 +13,6 @@ class AuthController extends Controller
     {
         if (!Auth::check()){
             if (($user = User::where('login', $request->login)->first()) && ($user->password === $request->password)){
-                Auth::login($user);
                 return response()->json([
                     "data" => [
                         "user_token" => $user->generateToken()
@@ -31,12 +30,7 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        Auth::logout();
-
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
-
+        Auth::user()->update(['api_token' => null]);
         return response()->json([
             "data" => [
                 "message" => "logout"

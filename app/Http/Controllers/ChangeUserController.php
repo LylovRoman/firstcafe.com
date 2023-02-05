@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ChangeUserStoreRequest;
+use App\Models\Change;
 use App\Models\ChangeUser;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ChangeUserController extends Controller
@@ -36,12 +38,15 @@ class ChangeUserController extends Controller
      */
     public function store(ChangeUserStoreRequest $request)
     {
-        foreach ($request->users as $user)
-        {
-            ChangeUser::query()->create([
-                'change_id' => $request->change->first()->id,
-                'user_login' => $user->login
-            ]);
+        if (Change::query()->where("id", $request->change["id"])->first()) {
+            foreach ($request->users as $user) {
+                if (User::query()->where("login", $user["login"])->first()) {
+                    ChangeUser::query()->create([
+                        'change_id' => $request->change["id"],
+                        'user_login' => $user["login"]
+                    ]);
+                }
+            }
         }
         return response()->json([
             "data" => [

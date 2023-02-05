@@ -3,8 +3,10 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ChangeController;
 use App\Http\Controllers\ChangeUserController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,19 +24,21 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware('ghost')->group(function () {
-    Route::post('/login', [AuthController::class, 'login']);
-});
+
+Route::post('/login', [AuthController::class, 'login']);
+
 Route::middleware('auth:api')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/getjson', function (){
-        return response()->json([
-            "успешно" => "аааа"
-        ]);
+
+    Route::middleware('admin')->group(function(){
+        Route::get('/users', [UserController::class, 'index']);
+        Route::post('/users', [UserController::class, 'store']);
+        Route::post('/change', [ChangeController::class, 'store']);
+        Route::post('/change/user', [ChangeUserController::class, 'store']);
+        Route::get('/change/{code}/orders', [OrderController::class, 'index']);
+    });
+
+    Route::middleware('waiter')->group(function(){
+        Route::post('/orders/book', [OrderController::class, 'store']);
     });
 });
-
-Route::get('/users', [UserController::class, 'index']);
-Route::post('/users', [UserController::class, 'store']);
-Route::post('/change', [ChangeController::class, 'store']);
-Route::post('/change/user', [ChangeUserController::class, 'store']);
