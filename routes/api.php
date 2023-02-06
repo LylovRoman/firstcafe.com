@@ -40,5 +40,11 @@ Route::middleware('auth:api')->group(function () {
 
     Route::middleware('waiter')->group(function(){
         Route::post('/orders/book', [OrderController::class, 'store']);
+        Route::get('/orders/{code}', [OrderController::class, 'show']);
+        Route::get('/change/{code}/orders', [OrderController::class, 'showChange']);
+    });
+
+    Route::middleware('cook')->group(function(){
+        //
     });
 });
