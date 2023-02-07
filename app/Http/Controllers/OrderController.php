@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\OrderShowRequest;
+use App\Http\Requests\OrderStoreInRequest;
 use App\Http\Requests\OrderStoreRequest;
 use App\Http\Resources\OrderCollection;
+use App\Http\Resources\OrderCookCollection;
+use App\Http\Resources\OrderShowChangeResource;
 use App\Http\Resources\OrderShowResource;
 use App\Models\Change;
 use App\Models\Order;
@@ -59,6 +62,26 @@ class OrderController extends Controller
         ]);
     }
 
+    public function storeInOrder(OrderStoreInRequest $request, $book_id)
+    {
+        $change = Change::query()->orderByDesc('id')->first();
+        foreach ($request->orders as $order) {
+            if (!isset($order['status'])) {
+                $order['status'] = "принят";
+            }
+            Order::query()->create([
+                'book_id' => $book_id,
+                'dish' => $order['dish'],
+                'change_id' => $change->id,
+                'status' => $order['status']
+            ]);
+        }
+        return response()->json([
+            "data" => [
+                "code" => "QSASE"
+            ]
+        ]);
+    }
     /**
      * Display the specified resource.
      *
@@ -72,7 +95,12 @@ class OrderController extends Controller
 
     public function showChange(OrderShowRequest $request, $id)
     {
-        return new OrderShowResource(Order::query()->where('id', $id)->where('status', $request->orders['status'])->first());
+        return new OrderShowChangeResource(Order::query()->where('status', $request->orders['status'])->where('change_id', $id)->first());
+    }
+
+    public function showChangeAccept($id)
+    {
+        return new OrderCookCollection(Order::query()->where('status', 'принят')->where('change_id', $id)->get());
     }
     /**
      * Show the form for editing the specified resource.
@@ -92,9 +120,17 @@ class OrderController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Order $order)
+    public function update(Request $request, $id)
     {
-        //
+        $order = Order::query()->where('id', $id)->first();
+        $order->update([
+           'status' => $request->status
+        ]);
+        return response()->json([
+            "data" => [
+                "code" => "QSASE"
+            ]
+        ]);
     }
 
     /**
@@ -103,8 +139,13 @@ class OrderController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Order $order)
+    public function destroy($id)
     {
-        //
+        Order::destroy($id);
+        return response()->json([
+            "data" => [
+                "code" => "QSASE"
+            ]
+        ]);
     }
 }

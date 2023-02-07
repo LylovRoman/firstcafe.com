@@ -42,9 +42,14 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/orders/book', [OrderController::class, 'store']);
         Route::get('/orders/{code}', [OrderController::class, 'show']);
         Route::get('/change/{code}/orders', [OrderController::class, 'showChange']);
+        Route::put('/orders/book/{code}', [OrderController::class, 'update']);
+        Route::post('/orders/{code}/dish', [OrderController::class, 'storeInOrder']);
+        Route::delete('/orders/{code}/dish', [OrderController::class, 'destroy']);
     });
 
     Route::middleware('cook')->group(function(){
-        //
+        Route::get('/change/{code}/orders', [OrderController::class, 'showChangeAccept']);
+        Route::put('/orders/book/{code}', [OrderController::class, 'update']);
     });
 });
+
