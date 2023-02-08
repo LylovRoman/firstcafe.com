@@ -56,7 +56,7 @@ class UserController extends Controller
                 "message" => "Validation error",
                 "errors" => array()
             ]
-        ]);
+        ], 422);
     }
 
     /**

@@ -22,7 +22,7 @@ class Authenticate extends Middleware
                     "code" => 403,
                     "message" => "Login failed"
                 ]
-            ]));
+            ], 403));
         }
     }
 }

@@ -23,7 +23,7 @@ class IsAdmin
                     "code" => 401,
                     "message" => "Authentication failed"
                 ]
-            ]);;
+            ], 401);
         }
         return $next($request);
     }

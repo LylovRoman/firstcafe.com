@@ -25,7 +25,7 @@ class AuthController extends Controller
                 "code" => 401,
                 "message" => "Authentication failed"
             ]
-        ]);
+        ], 401);
     }
 
     public function logout(Request $request)
